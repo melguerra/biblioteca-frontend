@@ -1,14 +1,37 @@
-import { Link } from "react-router-dom"; //permite navegar entre páginas sin recargar la página completa//
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function Home() {
-  const libros = [  //es una lista de libros//
-    "Harry Potter",
-    "Clean Code",
-    "El Principito"
-  ];
+
+  const [libros, setLibros] = useState([]);
+
+  useEffect(() => {
+
+    obtenerLibros();
+
+  }, []);
+
+  const obtenerLibros = async () => {
+
+    try {
+
+      const respuesta = await fetch("http://localhost:3000/api/libros");
+
+      const datos = await respuesta.json();
+
+      setLibros(datos);
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
 
   return (
     <div className="home">
+
       <h1>📚 Biblioteca Personal</h1>
 
       <p>
@@ -18,7 +41,7 @@ function Home() {
 
       <div>
 
-        <Link to="/login"> 
+        <Link to="/login">
           <button>Iniciar sesión</button>
         </Link>
 
@@ -34,10 +57,14 @@ function Home() {
 
       <ul>
 
-        {libros.map((libro, index) => (  //aca recorre la lista de libros y muestra cada libro //
-          <li key={index}>
-            📖 {libro}
+        {libros.map((libro) => (
+
+          <li key={libro.id}>
+
+            📖 {libro.titulo} - {libro.autor}
+
           </li>
+
         ))}
 
       </ul>
