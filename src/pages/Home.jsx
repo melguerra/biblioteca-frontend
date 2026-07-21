@@ -59,7 +59,7 @@ function Home() {
 
         {libros.map((libro) => (
 
-          <li key={libro.id}>
+          <li key={libro._id}>
 
             📖 {libro.titulo} - {libro.autor}
 
