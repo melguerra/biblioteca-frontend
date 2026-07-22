@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
+
+const navigate = useNavigate(); 
 
 const manejarLogin = async (e) => {
   e.preventDefault();
@@ -35,6 +38,7 @@ localStorage.setItem("token", datos.token); //guarda el token en el localStorage
 localStorage.setItem("usuario", JSON.stringify(datos.usuario)); //guarda la informacion del usuario 
 
 alert(datos.mensaje);
+navigate("/dashboard");
 
 } catch (error) {
   console.log(error);
