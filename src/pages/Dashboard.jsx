@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 function Dashboard() {
 
   const [libros, setLibros] = useState([]);  //guardar los libros
-  
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
 
@@ -14,7 +13,6 @@ function Dashboard() {
   const obtenerLibros = async () => {
     try {
       const respuesta = await fetch("http://localhost:3000/api/libros");
-
       const datos = await respuesta.json();
 
       setLibros(datos);
@@ -59,6 +57,31 @@ function Dashboard() {
   }
 };
 
+const eliminarLibro = async (id) => {
+
+  const confirmar = window.confirm("¿Está seguro que desea eliminar este libro?");
+
+  if (!confirmar) {
+    return;
+  }
+
+  try {
+
+    const respuesta = await fetch(`http://localhost:3000/api/libros/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!respuesta.ok) {
+      alert("Error al eliminar el libro.");
+      return;
+    }
+
+    obtenerLibros();
+
+  } catch (error) {
+    console.log(error);
+  }
+};
   return (
     <div className="home">
 
@@ -104,32 +127,22 @@ function Dashboard() {
 
         </thead>
 
-        <tbody>
+ <tbody>
+          {libros.map((libro) => (
+            <tr key={libro._id}>
+              <td>{libro.titulo}</td>
+              <td>{libro.autor}</td>
+              <td>
+                <button>Editar</button>
 
-          {libros.map((libro) => ( //aca recorre todos los libros que recibimos del backend
-
-  <tr key={libro._id}>
-
-    <td>{libro.titulo}</td>
-
-    <td>{libro.autor}</td>
-
-    <td>
-
-      <button>Editar</button>
-
-      <button>Eliminar</button>
-
-    </td>
-
-  </tr>
-
-))}
-
+                <button onClick={() => eliminarLibro(libro._id)}>
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
-
       </table>
-
     </div>
   );
 }
