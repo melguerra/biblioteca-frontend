@@ -5,6 +5,7 @@ function Dashboard() {
   const [libros, setLibros] = useState([]);  //guardar los libros
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
+  const [idEditar, setIdEditar] = useState(null);
 
   useEffect(() => { //cargar los libros cuando se abre el dashboard
     obtenerLibros(); //hace el GET al backend
@@ -30,17 +31,22 @@ function Dashboard() {
   }
 
   try {
+    const url = idEditar
+  ? `http://localhost:3000/api/libros/${idEditar}`
+  : "http://localhost:3000/api/libros";
 
-    const respuesta = await fetch("http://localhost:3000/api/libros", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        titulo,
-        autor,
-      }),
-    });
+const metodo = idEditar ? "PUT" : "POST";
+
+const respuesta = await fetch(url, {
+  method: metodo,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    titulo,
+    autor,
+  }),
+});
 
     if (!respuesta.ok) {
       alert("Error al agregar el libro.");
@@ -49,6 +55,7 @@ function Dashboard() {
 
     setTitulo("");
     setAutor("");
+    setIdEditar(null);
 
     obtenerLibros();
 
@@ -82,6 +89,13 @@ const eliminarLibro = async (id) => {
     console.log(error);
   }
 };
+
+const editarLibro = (libro) => {
+  setTitulo(libro.titulo);
+  setAutor(libro.autor);
+  setIdEditar(libro._id);
+};
+
   return (
     <div className="home">
 
@@ -133,7 +147,10 @@ const eliminarLibro = async (id) => {
               <td>{libro.titulo}</td>
               <td>{libro.autor}</td>
               <td>
-                <button>Editar</button>
+
+               <button onClick={() => editarLibro(libro)}>
+                  Editar
+                </button>
 
                 <button onClick={() => eliminarLibro(libro._id)}>
                   Eliminar
