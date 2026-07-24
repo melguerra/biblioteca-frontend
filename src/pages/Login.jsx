@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { iniciarSesion } from "../store/slices/usuarioSlice";
 
 function Login() {
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 
-const navigate = useNavigate(); 
+const navigate = useNavigate();
+const dispatch = useDispatch(); 
 
 const manejarLogin = async (e) => {
   e.preventDefault();
@@ -36,6 +39,13 @@ try {
 
 localStorage.setItem("token", datos.token); //guarda el token en el localStorage para que el usuario pueda estar logueado y no tenga que loguearse cada vez que recarga la pagina
 localStorage.setItem("usuario", JSON.stringify(datos.usuario)); //guarda la informacion del usuario 
+
+dispatch(
+  iniciarSesion({
+    usuario: datos.usuario,
+    token: datos.token,
+  })
+);
 
 alert(datos.mensaje);
 navigate("/dashboard");

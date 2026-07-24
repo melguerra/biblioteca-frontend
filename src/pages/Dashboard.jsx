@@ -23,14 +23,14 @@ function Dashboard() {
     }
   };
 
-  const agregarLibro = async () => {
-
-  if (titulo === "" || autor === "") {
-    alert("Complete todos los campos.");
-    return;
-  }
-
+   const guardarLibro = async () => {
+   if (titulo.trim() === "" || autor.trim() === "") { //el trim elimina los espacios en blanco al inicio y al final de la cadena
+  alert("Complete todos los campos.");
+  return;
+}
   try {
+    const token = localStorage.getItem("token");
+
     const url = idEditar
   ? `http://localhost:3000/api/libros/${idEditar}`
   : "http://localhost:3000/api/libros";
@@ -40,8 +40,9 @@ const metodo = idEditar ? "PUT" : "POST";
 const respuesta = await fetch(url, {
   method: metodo,
   headers: {
-    "Content-Type": "application/json",
-  },
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${token}`,
+},
   body: JSON.stringify({
     titulo,
     autor,
@@ -73,10 +74,14 @@ const eliminarLibro = async (id) => {
   }
 
   try {
+    const token = localStorage.getItem("token");
 
     const respuesta = await fetch(`http://localhost:3000/api/libros/${id}`, {
-      method: "DELETE",
-    });
+  method: "DELETE",
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
 
     if (!respuesta.ok) {
       alert("Error al eliminar el libro.");
@@ -121,8 +126,8 @@ const editarLibro = (libro) => {
   onChange={(e) => setAutor(e.target.value)}
 />
 
-  <button onClick={agregarLibro}>
-  Agregar libro
+ <button onClick={guardarLibro}>
+  {idEditar ? "Actualizar libro" : "Agregar libro"}
 </button>
 
 </div>
