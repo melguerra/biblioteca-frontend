@@ -13,7 +13,7 @@ function Dashboard() {
 
   const obtenerLibros = async () => {
     try {
-      const respuesta = await fetch("http://localhost:3000/api/libros");
+      const respuesta = await fetch("https://biblioteca-backend-psi.vercel.app/api/libros");
       const datos = await respuesta.json();
 
       setLibros(datos);
@@ -32,8 +32,8 @@ function Dashboard() {
     const token = localStorage.getItem("token");
 
     const url = idEditar
-  ? `http://localhost:3000/api/libros/${idEditar}`
-  : "http://localhost:3000/api/libros";
+  ? `https://biblioteca-backend-psi.vercel.app/api/libros/${idEditar}`
+  : "https://biblioteca-backend-psi.vercel.app/api/libros";
 
 const metodo = idEditar ? "PUT" : "POST";
 
@@ -76,7 +76,7 @@ const eliminarLibro = async (id) => {
   try {
     const token = localStorage.getItem("token");
 
-    const respuesta = await fetch(`http://localhost:3000/api/libros/${id}`, {
+    const respuesta = await fetch(`https://biblioteca-backend-psi.vercel.app/api/libros/${id}`, {
   method: "DELETE",
   headers: {
     Authorization: `Bearer ${token}`,

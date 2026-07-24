@@ -15,7 +15,7 @@ function Home() {
 
     try {
 
-      const respuesta = await fetch("http://localhost:3000/api/libros");
+      const respuesta = await fetch("https://biblioteca-backend-psi.vercel.app/api/libros");
 
       const datos = await respuesta.json();
 
