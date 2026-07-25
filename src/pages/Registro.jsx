@@ -1,19 +1,52 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Registro() {
   const [nombre, setNombre] = useState("");
-  const [usuario, setUsuario] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const manejarRegistro = (e) => {
+  const navigate = useNavigate();
+
+  const manejarRegistro = async (e) => {
     e.preventDefault();
 
-    if (nombre === "" || usuario === "" || password === "") {
+    if (nombre === "" || email === "" || password === "") {
       alert("Complete todos los campos.");
       return;
     }
 
-    alert("Más adelante el usuario se registrará.");
+    try {
+      const respuesta = await fetch(
+        "https://biblioteca-backend-psi.vercel.app/api/usuarios/registro",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nombre,
+            email,
+            password,
+          }),
+        }
+      );
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        alert(datos.mensaje);
+        return;
+      }
+
+      alert("Usuario registrado correctamente");
+
+      navigate("/login");
+
+    } catch (error) {
+      console.log(error);
+      alert("Error al registrar usuario");
+    }
   };
 
   return (
@@ -31,11 +64,11 @@ function Registro() {
         </div>
 
         <div>
-          <label>Usuario</label>
+          <label>Email</label>
           <input
-            type="text"
-            value={usuario}
-            onChange={(e) => setUsuario(e.target.value)}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
